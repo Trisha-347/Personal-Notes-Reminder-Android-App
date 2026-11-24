@@ -1,0 +1,1280 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+        <meta name="theme-color" content="#0b6b63">
+        <title>Pulse</title>
+        <style>
+            :root {
+                --bg: #f6faf8;
+                --sf: #e9f1ee;
+                --sf2: #dbe6e2;
+                --tx: #161d1b;
+                --mu: #58635f;
+                --pr: #0b6b63;
+                --on: #fff;
+                --pc: #b8ece4;
+                --er: #ba1a1a;
+                --am: #ffdf9e;
+                --ns: 55%;
+                --nl: 88%;
+                color-scheme: light
+            }
+
+            @media(prefers-color-scheme: dark) {
+                :root:not([data-theme="light"]) {
+                    --bg:#0e1513;
+                    --sf: #18201e;
+                    --sf2: #26302d;
+                    --tx: #dde5e2;
+                    --mu: #9aa6a2;
+                    --pr: #7fd6cb;
+                    --on: #00201d;
+                    --pc: #005049;
+                    --er: #ffb4ab;
+                    --am: #5c4300;
+                    --ns: 24%;
+                    --nl: 20%;
+                    color-scheme: dark
+                }
+            }
+
+            :root[data-theme="dark"] {
+                --bg: #0e1513;
+                --sf: #18201e;
+                --sf2: #26302d;
+                --tx: #dde5e2;
+                --mu: #9aa6a2;
+                --pr: #7fd6cb;
+                --on: #00201d;
+                --pc: #005049;
+                --er: #ffb4ab;
+                --am: #5c4300;
+                --ns: 24%;
+                --nl: 20%;
+                color-scheme: dark
+            }
+
+            :root {
+                box-sizing: border-box;
+                padding-block-start: env(safe-area-inset-top,0px);
+                padding-block-end: env(safe-area-inset-bottom,0px)
+            }
+
+            html {
+                scroll-padding-top: env(safe-area-inset-top,0px)
+            }
+
+            * {
+                box-sizing: border-box;
+                -webkit-tap-highlight-color: transparent
+            }
+
+            html,body {
+                block-size: 100%;
+                margin: 0
+            }
+
+            body {
+                background: var(--bg);
+                color: var(--tx);
+                font: 15px/1.4 Roboto,system-ui,"Segoe UI",sans-serif;
+                display: flex;
+                flex-direction: column;
+                overflow: hidden
+            }
+
+            button {
+                font: inherit;
+                color: inherit;
+                background: none;
+                border: 0;
+                cursor: pointer;
+                border-radius: 20px;
+                padding: 8px 12px
+            }
+
+            button:focus-visible,input:focus-visible,select:focus-visible {
+                outline: 2px solid var(--pr)
+            }
+
+            header {
+                padding: 14px 14px 4px
+            }
+
+            h1 {
+                font-size: 26px;
+                font-weight: 500;
+                margin: 0;
+                display: flex;
+                justify-content: space-between;
+                align-items: center
+            }
+
+            #sum {
+                font-size: 13px;
+                color: var(--mu);
+                min-block-size: 18px;
+                margin-block-end: 8px
+            }
+
+            .ib {
+                inline-size: 42px;
+                block-size: 42px;
+                padding: 0;
+                font-size: 19px
+            }
+
+            .bar {
+                display: flex;
+                align-items: center;
+                background: var(--sf2);
+                border-radius: 28px;
+                padding: 2px 4px 2px 18px
+            }
+
+            .bar input {
+                flex: 1;
+                min-inline-size: 0;
+                border: 0;
+                background: none;
+                color: inherit;
+                font: inherit;
+                padding: 12px 0;
+                outline: 0
+            }
+
+            #pv {
+                font-size: 13px;
+                color: var(--pr);
+                padding: 4px 18px 0;
+                min-block-size: 22px
+            }
+
+            #chips {
+                display: flex;
+                gap: 6px;
+                overflow-x: auto;
+                padding: 2px 14px 6px
+            }
+
+            .chip {
+                background: var(--sf);
+                border: 1px solid var(--sf2);
+                border-radius: 8px;
+                padding: 4px 10px;
+                font-size: 13px;
+                white-space: nowrap
+            }
+
+            .chip.on {
+                background: var(--pc);
+                border-color: transparent
+            }
+
+            main {
+                flex: 1;
+                overflow-y: auto;
+                padding: 0 12px 130px
+            }
+
+            .grid {
+                columns: 2 150px;
+                column-gap: 10px
+            }
+
+            .sec {
+                font-size: 13px;
+                color: var(--mu);
+                margin: 14px 4px 6px;
+                display: flex;
+                justify-content: space-between;
+                align-items: center
+            }
+
+            .card {
+                position: relative;
+                break-inside: avoid;
+                margin-block-end: 10px;
+                padding: 12px 14px;
+                border-radius: 18px;
+                background: hsl(var(--h) var(--ns) var(--nl));
+                cursor: pointer
+            }
+
+            .card.d0 {
+                background: var(--sf)
+            }
+
+            .card b {
+                display: block;
+                font-size: 16px;
+                font-weight: 500;
+                margin-block-end: 4px;
+                padding-inline-end: 18px
+            }
+
+            .bd {
+                white-space: pre-wrap;
+                word-break: break-word;
+                display: -webkit-box;
+                -webkit-line-clamp: 7;
+                -webkit-box-orient: vertical;
+                overflow: hidden
+            }
+
+            .it {
+                font-size: 14px
+            }
+
+            .it.dn {
+                opacity: .55;
+                text-decoration: line-through
+            }
+
+            .mu {
+                color: var(--mu);
+                font-size: 12px
+            }
+
+            .pn {
+                position: absolute;
+                inset-block-start: 8px;
+                inset-inline-end: 10px;
+                font-size: 12px
+            }
+
+            .meta {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 4px;
+                margin-block-start: 8px
+            }
+
+            .rc,.tg {
+                font-size: 12px;
+                padding: 2px 9px;
+                border-radius: 10px;
+                background: rgba(127,127,127,.2)
+            }
+
+            .rc {
+                background: var(--am)
+            }
+
+            .rc.od {
+                background: var(--er);
+                color: var(--bg)
+            }
+
+            .empty {
+                text-align: center;
+                color: var(--mu);
+                padding: 70px 24px;
+                line-height: 1.6
+            }
+
+            nav {
+                display: flex;
+                background: var(--sf);
+                padding: 8px 4px 10px
+            }
+
+            nav button {
+                flex: 1;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 2px;
+                font-size: 12px;
+                color: var(--mu)
+            }
+
+            nav button i {
+                font-style: normal;
+                font-size: 19px;
+                padding: 3px 22px;
+                border-radius: 14px
+            }
+
+            nav button.on {
+                color: var(--tx);
+                font-weight: 600
+            }
+
+            nav button.on i {
+                background: var(--pc)
+            }
+
+            .fab {
+                position: fixed;
+                inset-inline-end: 18px;
+                inset-block-end: calc(86px + env(safe-area-inset-bottom,0px));
+                inline-size: 60px;
+                block-size: 60px;
+                border-radius: 19px;
+                background: var(--pr);
+                color: var(--on);
+                font-size: 30px;
+                padding: 0;
+                box-shadow: 0 4px 12px rgba(0,0,0,.3);
+                z-index: 5
+            }
+
+            .ov {
+                position: fixed;
+                inset: 0;
+                background: var(--bg);
+                display: none;
+                flex-direction: column;
+                z-index: 20;
+                padding: env(safe-area-inset-top,0px) 0 env(safe-area-inset-bottom,0px)
+            }
+
+            .ov.show {
+                display: flex
+            }
+
+            .top {
+                display: flex;
+                align-items: center;
+                padding: 6px 8px
+            }
+
+            .top span {
+                flex: 1
+            }
+
+            .ebody {
+                flex: 1;
+                overflow-y: auto;
+                padding: 4px 18px
+            }
+
+            #e-title {
+                inline-size: 100%;
+                border: 0;
+                background: none;
+                color: inherit;
+                font: 500 24px Roboto,system-ui,sans-serif;
+                outline: 0;
+                padding: 8px 0
+            }
+
+            #e-body {
+                inline-size: 100%;
+                min-block-size: 45vh;
+                border: 0;
+                background: none;
+                color: inherit;
+                font: 16px/1.5 Roboto,system-ui,sans-serif;
+                outline: 0;
+                resize: none
+            }
+
+            .row {
+                display: flex;
+                align-items: center;
+                gap: 8px
+            }
+
+            .row input[type=checkbox] {
+                inline-size: 20px;
+                block-size: 20px;
+                accent-color: var(--pr)
+            }
+
+            .row input[type=text] {
+                flex: 1;
+                border: 0;
+                background: none;
+                color: inherit;
+                font: inherit;
+                font-size: 16px;
+                padding: 9px 0;
+                outline: 0
+            }
+
+            .rem,.tools {
+                display: flex;
+                gap: 6px;
+                align-items: center;
+                flex-wrap: wrap;
+                padding: 8px 14px
+            }
+
+            .rem {
+                border-block-start: 1px solid rgba(127,127,127,.25)
+            }
+
+            .rem input,.rem select {
+                background: var(--sf2);
+                color: inherit;
+                border: 0;
+                border-radius: 10px;
+                padding: 9px;
+                font: inherit
+            }
+
+            .q {
+                background: var(--sf2);
+                font-size: 13px;
+                padding: 6px 12px
+            }
+
+            .dot {
+                inline-size: 28px;
+                block-size: 28px;
+                border-radius: 50%;
+                padding: 0;
+                border: 2px solid rgba(127,127,127,.45)
+            }
+
+            .dlg {
+                position: fixed;
+                inset: 0;
+                background: rgba(0,0,0,.55);
+                display: none;
+                align-items: center;
+                justify-content: center;
+                z-index: 30;
+                padding: 20px
+            }
+
+            .dlg.show {
+                display: flex
+            }
+
+            .dlg>div {
+                background: var(--bg);
+                border-radius: 26px;
+                padding: 22px;
+                inline-size: 100%;
+                max-inline-size: 360px;
+                max-block-size: 90%;
+                overflow: auto
+            }
+
+            .dlg h2 {
+                margin: 0 0 4px;
+                font-size: 21px;
+                font-weight: 500
+            }
+
+            .fb {
+                background: var(--pr);
+                color: var(--on)
+            }
+
+            .tb {
+                background: var(--sf2)
+            }
+
+            .acts {
+                display: flex;
+                gap: 8px;
+                flex-wrap: wrap;
+                margin-block-start: 16px
+            }
+
+            #bk {
+                inline-size: 100%;
+                block-size: 90px;
+                background: var(--sf);
+                color: inherit;
+                border: 0;
+                border-radius: 12px;
+                padding: 8px;
+                font: 12px monospace
+            }
+
+            #toast {
+                position: fixed;
+                inset-inline-start: 14px;
+                inset-inline-end: 14px;
+                inset-block-end: calc(90px + env(safe-area-inset-bottom,0px));
+                background: var(--tx);
+                color: var(--bg);
+                border-radius: 12px;
+                padding: 10px 16px;
+                display: none;
+                justify-content: space-between;
+                align-items: center;
+                z-index: 40
+            }
+
+            #toast.show {
+                display: flex
+            }
+
+            #toast button {
+                color: var(--pr);
+                filter: invert(.2);
+                font-weight: 600
+            }
+        </style>
+    </head>
+    <body>
+        <header>
+            <h1>
+                <span id="ttl">Notes</span>
+                <span>
+                    <button class="ib" id="mic" title="Voice">🎤</button>
+                    <button class="ib" id="set" title="Settings">⚙</button>
+                </span>
+            </h1>
+            <div id="sum"></div>
+            <div class="bar">
+                <input id="q" placeholder="Search, or type to quick add ↵" autocomplete="off">
+                <button class="ib" id="add">＋</button>
+            </div>
+            <div id="pv"></div>
+        </header>
+        <div id="chips"></div>
+        <main id="main"></main>
+        <nav>
+            <button data-v="notes" class="on">
+                <i>📝</i>
+                Notes
+            </button>
+            <button data-v="rem">
+                <i>⏰</i>
+                Reminders
+            </button>
+            <button data-v="arch">
+                <i>📦</i>
+                Archive
+            </button>
+            <button data-v="trash">
+                <i>🗑</i>
+                Trash
+            </button>
+        </nav>
+        <button class="fab" id="fab" title="New note">＋</button>
+        <div id="ed" class="ov">
+            <div class="top">
+                <button class="ib" id="back" title="Save and close">←</button>
+                <span></span>
+                <button class="ib" id="e-pin" title="Pin">📌</button>
+                <button class="ib" id="e-arch" title="Archive">📦</button>
+                <button class="ib" id="e-del" title="Delete">🗑</button>
+            </div>
+            <div class="ebody">
+                <input id="e-title" placeholder="Title">
+                <textarea id="e-body" placeholder="Write here. Use #tags to organise."></textarea>
+                <div id="e-list"></div>
+            </div>
+            <div class="rem">
+                ⏰ <input type="datetime-local" id="e-rem">
+                <select id="e-rep">
+                    <option value="">No repeat</option>
+                    <option value="d">Daily</option>
+                    <option value="w">Weekly</option>
+                    <option value="m">Monthly</option>
+                </select>
+                <button class="ib" id="e-clr" title="Clear reminder">✕</button>
+                <button class="q" data-in="60">In 1 hour</button>
+                <button class="q" data-at="20">Tonight 8pm</button>
+                <button class="q" data-at="9" data-d="1">Tomorrow 9am</button>
+            </div>
+            <div class="tools">
+                <button class="tb" id="e-chk">☑ List</button>
+                <span id="e-cols" style="display:flex;gap:6px"></span>
+            </div>
+        </div>
+        <div id="alarm" class="dlg">
+            <div>
+                <h2 id="al-t"></h2>
+                <div class="mu" id="al-s"></div>
+                <div class="acts">
+                    <button class="fb" id="al-done">Done</button>
+                    <button class="tb" data-snz="10">Snooze 10 min</button>
+                    <button class="tb" data-snz="60">1 hour</button>
+                </div>
+            </div>
+        </div>
+        <div id="sett" class="dlg">
+            <div>
+                <h2>Settings</h2>
+                <div class="mu">Theme</div>
+                <div class="acts" style="margin-block-start:6px">
+                    <button class="tb" data-th="auto">Auto</button>
+                    <button class="tb" data-th="light">Light</button>
+                    <button class="tb" data-th="dark">Dark</button>
+                </div>
+                <div class="acts">
+                    <button class="tb" id="notif">Enable alerts</button>
+                    <button class="tb" id="purge">Empty trash</button>
+                </div>
+                <div class="mu" style="margin-block-start:16px">Backup: copy this text, or paste a backup here and import.</div>
+                <textarea id="bk"></textarea>
+                <div class="acts" style="margin-block-start:8px">
+                    <button class="tb" id="exp">Show backup</button>
+                    <button class="tb" id="imp">Import</button>
+                    <button class="fb" id="sclose">Close</button>
+                </div>
+                <div class="mu" style="margin-block-start:14px">Reminders ring while Pulse is open. Anything overdue rings when you return.</div>
+            </div>
+        </div>
+        <div id="toast"></div>
+        <script>
+            const $ = s => document.querySelector(s)
+              , $$ = s => [...document.querySelectorAll(s)];
+            const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;'
+            }[c]));
+            const KEY = 'pulse.v1'
+              , HUES = [0, 12, 42, 140, 190, 250, 320]
+              , REP = {
+                d: 'daily',
+                w: 'weekly',
+                m: 'monthly'
+            };
+            let S = {
+                notes: [],
+                theme: 'auto'
+            }, view = 'notes', q = '', tag = null, cur = null, ring = null, tt, ac;
+            try {
+                Object.assign(S, JSON.parse(localStorage.getItem(KEY) || '{}'))
+            } catch (e) {}
+            const save = () => {
+                try {
+                    localStorage.setItem(KEY, JSON.stringify(S))
+                } catch (e) {}
+            }
+            ;
+            const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+            const mk = o => ({
+                id: uid(),
+                title: '',
+                body: '',
+                items: null,
+                c: 0,
+                pin: 0,
+                arch: 0,
+                del: 0,
+                rem: 0,
+                rep: '',
+                ack: 0,
+                upd: Date.now(),
+                ...o
+            });
+            const txt = n => (n.title + ' ' + n.body + ' ' + (n.items || []).map(i => i.t).join(' '));
+            const tagsOf = n => [...new Set(txt(n).match(/#[\w-]+/g) || [])];
+            const loc = ts => new Date(ts - new Date(ts).getTimezoneOffset() * 6e4).toISOString().slice(0, 16);
+            function fmt(ts) {
+                const d = new Date(ts)
+                  , n = new Date()
+                  , t = d.toDateString() == n.toDateString()
+                  , m = new Date(+n + 864e5).toDateString() == d.toDateString();
+                return (t ? 'Today' : m ? 'Tomorrow' : d.toLocaleDateString([], {
+                    weekday: 'short',
+                    month: 'short',
+                    day: 'numeric'
+                })) + ', ' + d.toLocaleTimeString([], {
+                    hour: 'numeric',
+                    minute: '2-digit'
+                })
+            }
+
+            /* Smart capture: "Call mom tomorrow 6pm #family", "pay rent every month", "stretch in 30 min" */
+            function parse(s) {
+                let t = s, d = new Date(), m, rep = '';
+                const cut = r => {
+                    const x = t.match(r);
+                    if (x)
+                        t = t.replace(x[0], ' ');
+                    return x
+                }
+                ;
+                if (m = cut(/\bin (\d+) ?(m|mins?|minutes?|h|hrs?|hours?|d|days?)\b/i)) {
+                    const u = m[2][0].toLowerCase();
+                    return {
+                        d: new Date(Date.now() + +m[1] * (u == 'm' ? 6e4 : u == 'h' ? 36e5 : 864e5)),
+                        t: t.replace(/\s+/g, ' ').trim(),
+                        rep
+                    }
+                }
+                if (m = cut(/\bevery (day|week|month)\b|\b(daily|weekly|monthly)\b/i))
+                    rep = (m[1] || m[2])[0].toLowerCase();
+                let day = null
+                  , h = null
+                  , mi = 0;
+                if (cut(/\btomorrow\b/i))
+                    day = 1;
+                else if (cut(/\b(today|tonight)\b/i))
+                    day = 0;
+                else if (m = cut(/\b(sun|mon|tue|wed|thu|fri|sat)[a-z]*\b/i)) {
+                    day = ((['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'].indexOf(m[1].toLowerCase()) - d.getDay() + 7) % 7) || 7
+                }
+                if (m = cut(/\b(?:at )?(\d{1,2})(?::(\d{2}))?\s?(am|pm)\b/i)) {
+                    h = +m[1] % 12 + (m[3].toLowerCase() == 'pm' ? 12 : 0);
+                    mi = +(m[2] || 0)
+                } else if (m = cut(/\bat (\d{1,2})(?::(\d{2}))?\b/i)) {
+                    h = +m[1];
+                    mi = +(m[2] || 0);
+                    if (h < 7)
+                        h += 12
+                }
+                if (day == null && h == null && !rep)
+                    return {
+                        d: null,
+                        t: s,
+                        rep: ''
+                    };
+                d.setDate(d.getDate() + (day || 0));
+                d.setHours(h == null ? 9 : h, mi, 0, 0);
+                if (day == null && d < Date.now())
+                    d.setDate(d.getDate() + 1);
+                return {
+                    d,
+                    t: t.replace(/\s+/g, ' ').trim(),
+                    rep
+                }
+            }
+
+            function list() {
+                let a = S.notes.filter(n => view == 'trash' ? n.del : !n.del && (view == 'arch' ? n.arch : !n.arch) && (view != 'rem' || n.rem));
+                if (tag)
+                    a = a.filter(n => tagsOf(n).includes(tag));
+                if (q)
+                    a = a.filter(n => txt(n).toLowerCase().includes(q.toLowerCase()));
+                return a.sort(view == 'rem' ? (x, y) => x.rem - y.rem : (x, y) => y.pin - x.pin || y.upd - x.upd)
+            }
+            function card(n) {
+                const r = n.rem ? `<span class="rc ${n.rem < Date.now() && !n.ack ? 'od' : ''}">${n.ack ? '✓' : '⏰'} ${fmt(n.rem)}${n.rep ? ' ↻' : ''}</span>` : '';
+                const body = n.items ? n.items.slice(0, 5).map(i => `<div class="it ${i.d ? 'dn' : ''}">${i.d ? '☑' : '☐'} ${esc(i.t)}</div>`).join('') + (n.items.length > 5 ? `<div class="mu">+${n.items.length - 5} more</div>` : '') : `<div class="bd">${esc(n.body)}</div>`;
+                return `<div class="card ${n.c ? '' : 'd0'}" style="--h:${HUES[n.c]}" data-id="${n.id}">${n.pin ? '<span class="pn">📌</span>' : ''}${n.title ? `<b>${esc(n.title)}</b>` : ''}${body}<div class="meta">${r}${tagsOf(n).slice(0, 3).map(t => `<span class="tg">${esc(t)}</span>`).join('')}</div></div>`
+            }
+            const grid = a => `<div class="grid">${a.map(card).join('')}</div>`;
+            function render() {
+                const a = list()
+                  , now = Date.now()
+                  , live = S.notes.filter(n => !n.del && !n.arch && n.rem && !n.ack);
+                const od = live.filter(n => n.rem < now).length
+                  , td = live.filter(n => n.rem >= now && new Date(n.rem).toDateString() == new Date().toDateString()).length;
+                $('#ttl').textContent = {
+                    notes: 'Notes',
+                    rem: 'Reminders',
+                    arch: 'Archive',
+                    trash: 'Trash'
+                }[view];
+                $('#sum').textContent = [od && od + ' overdue', td && td + ' due today'].filter(Boolean).join(' · ') || 'All clear';
+                const all = [...new Set(S.notes.filter(n => !n.del).flatMap(tagsOf))];
+                $('#chips').innerHTML = all.map(t => `<button class="chip ${tag == t ? 'on' : ''}" data-tag="${esc(t)}">${esc(t)}</button>`).join('');
+                let h = '';
+                if (view == 'rem') {
+                    const td0 = n => new Date(n.rem).toDateString() == new Date().toDateString();
+                    [['Overdue', n => !n.ack && n.rem < now], ['Today', n => !n.ack && n.rem >= now && td0(n)], ['Upcoming', n => !n.ack && n.rem >= now && !td0(n)], ['Completed', n => n.ack]].forEach( ([t,f]) => {
+                        const x = a.filter(f);
+                        if (x.length)
+                            h += `<div class="sec">${t} (${x.length})</div>${grid(x)}`
+                    }
+                    )
+                } else {
+                    const p = a.filter(n => n.pin)
+                      , o = a.filter(n => !n.pin);
+                    h = p.length && o.length ? `<div class="sec">Pinned</div>${grid(p)}<div class="sec">Others</div>${grid(o)}` : grid(a);
+                    if (view == 'trash' && a.length)
+                        h = `<div class="sec">Tap a note to restore it. Deleted notes are removed after 30 days.</div>` + h
+                }
+                $('#main').innerHTML = h || `<div class="empty">${q ? 'No matches. Press Enter to save it as a new note.' : {
+                    notes: 'No notes yet.<br>Type above or tap ＋ to start.',
+                    rem: 'No reminders.<br>Try “Call mom tomorrow 6pm” in the box above.',
+                    arch: 'Nothing archived.',
+                    trash: 'Trash is empty.'
+                }[view]}</div>`;
+                $('#fab').style.display = view == 'trash' ? 'none' : '';
+                $$('nav button').forEach(b => b.classList.toggle('on', b.dataset.v == view))
+            }
+
+            /* Reminder engine */
+            function beep() {
+                try {
+                    ac = ac || new (window.AudioContext || window.webkitAudioContext)();
+                    [0, .25, .5].forEach(t => {
+                        const o = ac.createOscillator()
+                          , g = ac.createGain()
+                          , s = ac.currentTime + t;
+                        o.frequency.value = 880;
+                        o.connect(g);
+                        g.connect(ac.destination);
+                        g.gain.setValueAtTime(.25, s);
+                        g.gain.exponentialRampToValueAtTime(.001, s + .2);
+                        o.start(s);
+                        o.stop(s + .22)
+                    }
+                    )
+                } catch (e) {}
+            }
+            function alarm(n) {
+                ring = n.id;
+                const T = n.title || n.body || (n.items && n.items[0] && n.items[0].t) || 'Reminder';
+                $('#al-t').textContent = T.slice(0, 90);
+                $('#al-s').textContent = (Date.now() - n.rem > 12e4 ? 'Missed · ' : '') + fmt(n.rem);
+                $('#alarm').classList.add('show');
+                beep();
+                try {
+                    navigator.vibrate && navigator.vibrate([250, 120, 250])
+                } catch (e) {}
+                try {
+                    if (Notification.permission == 'granted')
+                        new Notification('Pulse reminder',{
+                            body: T.slice(0, 90)
+                        })
+                } catch (e) {}
+            }
+            function tick() {
+                const now = Date.now()
+                  , due = S.notes.filter(n => n.rem && !n.ack && !n.del && n.rem <= now);
+                document.title = (due.length ? `(${due.length}) ` : '') + 'Pulse';
+                if (ring)
+                    beep();
+                else if (due.length)
+                    alarm(due.sort( (a, b) => a.rem - b.rem)[0])
+            }
+            function advance(n) {
+                if (n.rep) {
+                    let r = new Date(n.rem);
+                    do {
+                        n.rep == 'm' ? r.setMonth(r.getMonth() + 1) : r.setTime(+r + (n.rep == 'd' ? 864e5 : 6048e5))
+                    } while (r <= Date.now());
+                    n.rem = +r
+                } else
+                    n.ack = 1;
+                n.upd = Date.now()
+            }
+            function endRing() {
+                ring = null;
+                $('#alarm').classList.remove('show');
+                save();
+                render();
+                tick()
+            }
+            $('#al-done').onclick = () => {
+                const n = S.notes.find(x => x.id == ring);
+                if (n)
+                    advance(n);
+                endRing()
+            }
+            ;
+            $$('[data-snz]').forEach(b => b.onclick = () => {
+                const n = S.notes.find(x => x.id == ring);
+                if (n) {
+                    n.rem = Date.now() + +b.dataset.snz * 6e4;
+                    n.ack = 0
+                }
+                endRing()
+            }
+            );
+
+            function toast(m, u) {
+                const t = $('#toast');
+                t.innerHTML = `<span>${esc(m)}</span>${u ? '<button id="undo">Undo</button>' : ''}`;
+                t.classList.add('show');
+                if (u)
+                    $('#undo').onclick = () => {
+                        u();
+                        save();
+                        render();
+                        t.classList.remove('show')
+                    }
+                    ;
+                clearTimeout(tt);
+                tt = setTimeout( () => t.classList.remove('show'), 4500)
+            }
+
+            /* Editor */
+            const pullItems = () => $$('#e-list .row').map(r => ({
+                t: r.querySelector('[type=text]').value,
+                d: r.querySelector('[type=checkbox]').checked
+            }));
+            function pull() {
+                const n = cur.n;
+                n.title = $('#e-title').value;
+                if (n.items)
+                    n.items = pullItems();
+                else
+                    n.body = $('#e-body').value;
+                const v = $('#e-rem').value
+                  , t = v ? +new Date(v) : 0;
+                if (t != n.rem) {
+                    n.rem = t;
+                    n.ack = 0
+                }
+                n.rep = t ? $('#e-rep').value : ''
+            }
+            const rows = () => {
+                $('#e-list').innerHTML = cur.n.items.map( (i, k) => `<div class="row"><input type="checkbox" ${i.d ? 'checked' : ''}><input type="text" value="${esc(i.t)}" placeholder="List item"><button data-x="${k}">✕</button></div>`).join('') + '<button id="addi">＋ Add item</button>'
+            }
+            ;
+            const focusRow = k => {
+                const r = $$('#e-list .row')[Math.max(0, k)];
+                if (r)
+                    r.querySelector('[type=text]').focus()
+            }
+            ;
+            function paint() {
+                const n = cur.n;
+                $('#e-title').value = n.title;
+                $('#e-body').value = n.body;
+                $('#e-body').style.display = n.items ? 'none' : '';
+                $('#e-list').style.display = n.items ? '' : 'none';
+                if (n.items)
+                    rows();
+                $('#e-rem').value = n.rem ? loc(n.rem) : '';
+                $('#e-rep').value = n.rep;
+                $('#e-pin').style.opacity = n.pin ? 1 : .45;
+                $('#e-arch').textContent = n.arch ? '📤' : '📦';
+                $('#ed').style.background = n.c ? `hsl(${HUES[n.c]} var(--ns) var(--nl))` : '';
+                $('#e-chk').textContent = n.items ? '☰ Text' : '☑ List'
+            }
+            function openEd(n, isNew) {
+                cur = {
+                    n,
+                    isNew
+                };
+                paint();
+                $('#ed').classList.add('show');
+                if (isNew)
+                    setTimeout( () => $('#e-title').focus(), 60)
+            }
+            function closeEd() {
+                if (!cur)
+                    return;
+                pull();
+                const n = cur.n;
+                if (n.items)
+                    n.items = n.items.filter(i => i.t.trim());
+                const empty = !n.title.trim() && !n.body.trim() && !(n.items && n.items.length);
+                if (empty)
+                    S.notes = S.notes.filter(x => x !== n);
+                else {
+                    n.upd = Date.now();
+                    if (cur.isNew)
+                        S.notes.push(n)
+                }
+                cur = null;
+                $('#ed').classList.remove('show');
+                save();
+                render();
+                tick()
+            }
+            $('#back').onclick = closeEd;
+            $('#e-pin').onclick = () => {
+                cur.n.pin ^= 1;
+                paint()
+            }
+            ;
+            $('#e-arch').onclick = () => {
+                const n = cur.n
+                  , a = n.arch;
+                pull();
+                n.arch = a ? 0 : 1;
+                closeEd();
+                toast(a ? 'Unarchived' : 'Archived', () => {
+                    n.arch = a
+                }
+                )
+            }
+            ;
+            $('#e-del').onclick = () => {
+                const n = cur.n;
+                if (cur.isNew) {
+                    n.title = n.body = '';
+                    n.items = null;
+                    closeEd();
+                    return
+                }
+                pull();
+                n.del = Date.now();
+                closeEd();
+                toast('Moved to trash', () => {
+                    n.del = 0
+                }
+                )
+            }
+            ;
+            $('#e-chk').onclick = () => {
+                pull();
+                const n = cur.n;
+                if (n.items) {
+                    n.body = n.items.map(i => i.t).join('\n');
+                    n.items = null
+                } else {
+                    n.items = n.body.split('\n').filter(x => x.trim()).map(t => ({
+                        t,
+                        d: 0
+                    }));
+                    if (!n.items.length)
+                        n.items = [{
+                            t: '',
+                            d: 0
+                        }];
+                    n.body = ''
+                }
+                paint();
+                if (n.items)
+                    focusRow(n.items.length - 1)
+            }
+            ;
+            $('#e-clr').onclick = () => {
+                $('#e-rem').value = '';
+                $('#e-rep').value = ''
+            }
+            ;
+            $$('.q').forEach(b => b.onclick = () => {
+                const d = new Date();
+                if (b.dataset.in)
+                    d.setMinutes(d.getMinutes() + +b.dataset.in);
+                else {
+                    d.setDate(d.getDate() + (+b.dataset.d || 0));
+                    d.setHours(+b.dataset.at, 0, 0, 0);
+                    if (d < Date.now())
+                        d.setDate(d.getDate() + 1)
+                }
+                $('#e-rem').value = loc(+d)
+            }
+            );
+            $('#e-cols').innerHTML = HUES.map( (h, i) => `<button class="dot" data-c="${i}" style="background:${i ? `hsl(${h} var(--ns) var(--nl))` : 'var(--sf2)'}" title="Colour"></button>`).join('');
+            $('#e-cols').onclick = e => {
+                const b = e.target.closest('[data-c]');
+                if (b) {
+                    pull();
+                    cur.n.c = +b.dataset.c;
+                    paint()
+                }
+            }
+            ;
+            $('#e-list').addEventListener('keydown', e => {
+                if (e.target.type != 'text')
+                    return;
+                const k = $$('#e-list .row').indexOf(e.target.parentNode);
+                if (e.key == 'Enter') {
+                    e.preventDefault();
+                    cur.n.items = pullItems();
+                    cur.n.items.splice(k + 1, 0, {
+                        t: '',
+                        d: 0
+                    });
+                    rows();
+                    focusRow(k + 1)
+                } else if (e.key == 'Backspace' && !e.target.value && $$('#e-list .row').length > 1) {
+                    e.preventDefault();
+                    cur.n.items = pullItems();
+                    cur.n.items.splice(k, 1);
+                    rows();
+                    focusRow(k - 1)
+                }
+            }
+            );
+            $('#e-list').addEventListener('click', e => {
+                const x = e.target.dataset.x;
+                if (e.target.id == 'addi') {
+                    cur.n.items = pullItems();
+                    cur.n.items.push({
+                        t: '',
+                        d: 0
+                    });
+                    rows();
+                    focusRow(cur.n.items.length - 1)
+                } else if (x != null) {
+                    cur.n.items = pullItems();
+                    cur.n.items.splice(+x, 1);
+                    rows()
+                }
+            }
+            );
+            document.addEventListener('keydown', e => {
+                if (e.key == 'Escape') {
+                    if (cur)
+                        closeEd();
+                    else
+                        $('#sett').classList.remove('show')
+                }
+            }
+            );
+
+            /* List interactions */
+            $('#main').onclick = e => {
+                const c = e.target.closest('.card');
+                if (!c)
+                    return;
+                const n = S.notes.find(x => x.id == c.dataset.id);
+                if (view == 'trash') {
+                    n.del = 0;
+                    save();
+                    render();
+                    toast('Restored')
+                } else
+                    openEd(n, false)
+            }
+            ;
+            $('#chips').onclick = e => {
+                const t = e.target.dataset.tag;
+                if (t) {
+                    tag = tag == t ? null : t;
+                    render()
+                }
+            }
+            ;
+            $$('nav button').forEach(b => b.onclick = () => {
+                view = b.dataset.v;
+                tag = null;
+                render();
+                $('#main').scrollTop = 0
+            }
+            );
+            $('#fab').onclick = () => openEd(mk(view == 'rem' ? {
+                rem: Date.now() + 36e5
+            } : {}), true);
+            $('#q').oninput = e => {
+                q = e.target.value;
+                const p = parse(q);
+                $('#pv').textContent = p.d ? '⏰ Reminder ' + fmt(+p.d) + (p.rep ? ' · repeats ' + REP[p.rep] : '') : '';
+                render()
+            }
+            ;
+            function quick() {
+                if (!q.trim())
+                    return;
+                const p = parse(q)
+                  , n = mk({
+                    title: (p.d ? p.t : q).trim(),
+                    rem: p.d ? +p.d : 0,
+                    rep: p.rep
+                });
+                S.notes.push(n);
+                q = '';
+                $('#q').value = '';
+                $('#pv').textContent = '';
+                save();
+                render();
+                toast(n.rem ? 'Reminder set for ' + fmt(n.rem) : 'Note saved')
+            }
+            $('#q').onkeydown = e => {
+                if (e.key == 'Enter')
+                    quick()
+            }
+            ;
+            $('#add').onclick = () => q.trim() ? quick() : $('#fab').click();
+            $('#mic').onclick = () => {
+                const R = window.SpeechRecognition || window.webkitSpeechRecognition;
+                if (!R)
+                    return toast('Voice input is not available in this browser');
+                try {
+                    const r = new R();
+                    r.onresult = e => {
+                        $('#q').value = e.results[0][0].transcript;
+                        $('#q').dispatchEvent(new Event('input'));
+                        $('#q').focus()
+                    }
+                    ;
+                    r.onerror = () => toast('Microphone is blocked here');
+                    r.start();
+                    toast('Listening…')
+                } catch (x) {
+                    toast('Voice input is unavailable')
+                }
+            }
+            ;
+
+            /* Settings */
+            function theme() {
+                const r = document.documentElement;
+                S.theme == 'auto' ? r.removeAttribute('data-theme') : r.setAttribute('data-theme', S.theme)
+            }
+            $('#set').onclick = () => $('#sett').classList.add('show');
+            $('#sclose').onclick = () => $('#sett').classList.remove('show');
+            $$('[data-th]').forEach(b => b.onclick = () => {
+                S.theme = b.dataset.th;
+                theme();
+                save()
+            }
+            );
+            $('#notif').onclick = () => {
+                try {
+                    Notification.requestPermission().then(p => toast(p == 'granted' ? 'Alerts enabled' : 'Alerts blocked by the browser'))
+                } catch (e) {
+                    toast('System alerts are unavailable here. In-app alarms still work.')
+                }
+            }
+            ;
+            $('#purge').onclick = () => {
+                S.notes = S.notes.filter(n => !n.del);
+                save();
+                render();
+                toast('Trash emptied')
+            }
+            ;
+            $('#exp').onclick = () => {
+                const t = JSON.stringify(S);
+                $('#bk').value = t;
+                $('#bk').select();
+                try {
+                    navigator.clipboard.writeText(t).then( () => toast('Backup copied'))
+                } catch (e) {}
+            }
+            ;
+            $('#imp').onclick = () => {
+                try {
+                    const d = JSON.parse($('#bk').value);
+                    if (!Array.isArray(d.notes))
+                        throw 0;
+                    S = Object.assign({
+                        theme: 'auto'
+                    }, d);
+                    theme();
+                    save();
+                    render();
+                    $('#sett').classList.remove('show');
+                    toast('Imported ' + d.notes.length + ' notes')
+                } catch (e) {
+                    toast('That is not a valid backup')
+                }
+            }
+            ;
+
+            /* Boot */
+            if (!S.seeded) {
+                S.seeded = 1;
+                const t = Date.now();
+                S.notes.push(mk({
+                    title: 'Welcome to Pulse',
+                    body: 'Type in the box at the top and press Enter.\n\n“Call mom tomorrow 6pm #family” creates a reminder.\n“Water plants every week” repeats it.\n\nTap a note to edit, add a colour, pin it or turn it into a checklist.',
+                    c: 3,
+                    pin: 1
+                }), mk({
+                    title: 'Try a checklist',
+                    items: [{
+                        t: 'Open this note',
+                        d: 1
+                    }, {
+                        t: 'Tick things off',
+                        d: 0
+                    }, {
+                        t: 'Add items with Enter',
+                        d: 0
+                    }],
+                    c: 2,
+                    upd: t - 1
+                }), mk({
+                    title: 'Your first reminder rings in 2 minutes #demo',
+                    rem: t + 12e4,
+                    upd: t - 2
+                }));
+                save()
+            }
+            S.notes = S.notes.filter(n => !(n.del && Date.now() - n.del > 2592e6));
+            theme();
+            render();
+            tick();
+            setInterval(tick, 10000);
+            document.addEventListener('visibilitychange', tick);
+        </script>
+    </body>
+</html>
